@@ -28,4 +28,6 @@ class ElementorCustomPluginFrontend extends elementorModules.ViewModule {
 	}
 }
 
-window.eementorCustomPluginFrontend = new ElementorCustomPluginFrontend();
+window.elementorCustomPluginFrontend = new ElementorCustomPluginFrontend();
+
+console.log( 'custom-plugin frontend.js' );

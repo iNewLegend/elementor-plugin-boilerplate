@@ -1,1 +1,1 @@
-console.log( 'editor frontend' );
+console.log( 'custom-plugin editor.js' );

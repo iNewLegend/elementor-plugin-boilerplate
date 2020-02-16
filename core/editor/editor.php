@@ -33,6 +33,7 @@ class Editor extends App {
 	}
 
 	public function enqueue_editor_styles() {
+		// Load editor.css
 		wp_enqueue_style(
 			'elementor-plugin',
 			$this->get_css_assets_url( 'editor', null, 'default', true ),
@@ -44,6 +45,7 @@ class Editor extends App {
 	}
 
 	public function enqueue_editor_scripts() {
+		// Load editor.js
 		wp_enqueue_script(
 			'elementor-plugin',
 			$this->get_js_assets_url( 'editor/editor' ),
@@ -56,7 +58,7 @@ class Editor extends App {
 			true
 		);
 
-		$this->print_config( 'elementor-pro' );
+		$this->print_config( 'elementor-custom-plugin' );
 	}
 
 	public function on_elementor_init() {
