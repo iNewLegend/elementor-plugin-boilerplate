@@ -48,11 +48,9 @@ class Editor extends App {
 		// Load editor.js
 		wp_enqueue_script(
 			'elementor-plugin',
-			$this->get_js_assets_url( 'editor/editor' ),
+			$this->get_js_assets_url( 'editor/editor.bundle' ),
 			[
-				'backbone-marionette',
 				'elementor-common',
-				'elementor-editor-modules',
 			],
 			ELEMENTOR_CUSTOM_PLUGIN_VERSION,
 			true
