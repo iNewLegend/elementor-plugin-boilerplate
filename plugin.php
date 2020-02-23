@@ -1,23 +1,21 @@
 <?php
-namespace ElementorCustomPlugin;
+namespace ElementorPlugin;
 
-use ElementorCustomPlugin\Core\Editor\Editor;
-use Elementor\Utils;
+use ElementorPlugin\Core\ModulesManager;
+use ElementorPlugin\Core\Editor\Editor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
 class Plugin {
-	const VERSION = '0.0.1';
-
 	/**
 	 * @var Plugin
 	 */
 	private static $_instance;
 
 	/**
-	 * @var Manager
+	 * @var ModuleManager
 	 */
 	public $modules_manager;
 
@@ -28,24 +26,8 @@ class Plugin {
 
 	private $classes_aliases = [];
 
-	private function __construct() {
-		spl_autoload_register( [ $this, 'autoload' ] );
-
-		$this->includes();
-		$this->setup_hooks();
-
-		$this->editor = new Editor();
-
-		//if ( is_admin() ) {
-		//	$this->admin = new Admin();
-		//}
-	}
-
-	/**
-	 * @return \Elementor\Plugin
-	 */
-	public static function elementor() {
-		return \Elementor\Plugin::$instance;
+	public static function get_title() {
+		return 'elementor custom plugin title';
 	}
 
 	public static function instance() {
@@ -56,8 +38,23 @@ class Plugin {
 		return self::$_instance;
 	}
 
-	private function includes() {
-		require ELEMENTOR_CUSTOM_PLUGIN_PATH . 'includes/modules-manager.php';
+	/**
+	 * @return \Elementor\Plugin
+	 */
+	public static function elementor() {
+		return \Elementor\Plugin::$instance;
+	}
+
+	private function __construct() {
+		spl_autoload_register( [ $this, 'autoload' ] );
+
+		$this->setup_hooks();
+
+		$this->editor = new Editor();
+
+		//if ( is_admin() ) {
+		//	$this->admin = new Admin();
+		//}
 	}
 
 	public function autoload( $class ) {
@@ -83,7 +80,7 @@ class Plugin {
 					$class_to_load
 				)
 			);
-			$filename = ELEMENTOR_CUSTOM_PLUGIN_PATH . $filename . '.php';
+			$filename = \ElementorPlugin::get_path() . $filename . '.php';
 
 			if ( is_readable( $filename ) ) {
 				include( $filename );
@@ -95,110 +92,14 @@ class Plugin {
 		}
 	}
 
-	public function enqueue_styles() {
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		$direction_suffix = is_rtl() ? '-rtl' : '';
-
-		$frontend_file_name = 'frontend' . $direction_suffix . $suffix . '.css';
-
-		$frontend_file_url = ELEMENTOR_CUSTOM_PLUGIN_ASSETS_URL . 'css/' . $frontend_file_name;
-
-		wp_enqueue_style(
-			'elementor-pro',
-			$frontend_file_url,
-			[],
-			ELEMENTOR_CUSTOM_PLUGIN_VERSION
-		);
-	}
-
-	public function enqueue_frontend_scripts() {
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		wp_enqueue_script(
-			'elementor-custom-plugin-frontend',
-			ELEMENTOR_CUSTOM_PLUGIN_URL . 'assets/js/frontend/frontend' . $suffix . '.js',
-			[
-				'elementor-frontend-modules',
-			],
-			ELEMENTOR_CUSTOM_PLUGIN_VERSION,
-			true
-		);
-
-		$locale_settings = [
-			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			'nonce' => wp_create_nonce( 'elementor-custom-plugin-frontend' ),
-		];
-
-		/**
-		 * Localize frontend settings.
-		 *
-		 * Filters the frontend localized settings.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param array $locale_settings Localized settings.
-		 */
-		$locale_settings = apply_filters( 'elementor_custom_plugin/frontend/localize_settings', $locale_settings );
-
-		Utils::print_js_config(
-			'elementor-pro-frontend',
-			'ElementorProFrontendConfig',
-			$locale_settings
-		);
-	}
-
-	public function register_frontend_scripts() {
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		wp_register_script(
-			'smartmenus',
-			ELEMENTOR_CUSTOM_PLUGIN_URL . 'assets/lib/smartmenus/jquery.smartmenus' . $suffix . '.js',
-			[
-				'jquery',
-			],
-			'1.0.1',
-			true
-		);
-
-		wp_register_script(
-			'social-share',
-			ELEMENTOR_CUSTOM_PLUGIN_URL . 'assets/lib/social-share/social-share' . $suffix . '.js',
-			[
-				'jquery',
-			],
-			'0.2.17',
-			true
-		);
-
-		wp_register_script(
-			'elementor-sticky',
-			ELEMENTOR_CUSTOM_PLUGIN_URL . 'assets/lib/sticky/jquery.sticky' . $suffix . '.js',
-			[
-				'jquery',
-			],
-			ELEMENTOR_CUSTOM_PLUGIN_VERSION,
-			true
-		);
-	}
-
 	public function on_elementor_init() {
-		$this->modules_manager = new Manager();
+		$this->modules_manager = new ModulesManager();
 
 		do_action( 'elementor_custom_plugin/init' );
 	}
 
 	private function setup_hooks() {
 		add_action( 'elementor/init', [ $this, 'on_elementor_init' ] );
-
-		add_action( 'elementor/frontend/before_register_scripts', [ $this, 'register_frontend_scripts' ] );
-
-		add_action( 'elementor/frontend/before_enqueue_scripts', [ $this, 'enqueue_frontend_scripts' ] );
-		add_action( 'elementor/frontend/after_enqueue_styles', [ $this, 'enqueue_styles' ] );
-	}
-
-	final public static function get_title() {
-		return 'elementor custom plugin title';
 	}
 }
 

@@ -1,5 +1,5 @@
 <?php
-namespace ElementorPlugin\Modules\Test;
+namespace ElementorPlugin\Modules\PluginGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -14,7 +14,7 @@ class Module extends \ElementorPlugin\Core\Base\Module {
 	}
 
 	public function get_name() {
-		return 'test-module';
+		return 'plugin-generator-module';
 	}
 
 	public function initialize() {

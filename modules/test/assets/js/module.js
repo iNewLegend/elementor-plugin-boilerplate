@@ -1,5 +1,0 @@
-class Module {
-	constructor() {
-		debugger;
-	}
-}

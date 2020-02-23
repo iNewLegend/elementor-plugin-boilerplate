@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-	"watch": "webpack --watch --progress"
+    "build_scripts": "webpack --config webpack.config.js",
+    "watch_scripts": "webpack --watch --progress",
+	"build_styles": "node-sass assets/src/scss -o assets/dist/css",
+	"watch_styles": "node-sass --watch assets/src/scss -o assets/dist/css"
   },
   "repository": {
     "type": "git",

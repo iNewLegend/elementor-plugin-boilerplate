@@ -1,13 +1,14 @@
 const path = require( 'path' );
 
 module.exports = {
+	devtool: 'source-map',
 	mode: 'development',
 	entry: {
-		editor: './assets/js/editor/editor.js',
+		editor: './assets/src/js/editor.js',
 	},
 	output: {
-		filename: '[name]/[name].bundle.js',
-		path: path.resolve( __dirname, 'assets/js' ),
+		filename: '../../js/[name].js',
+		path: path.resolve( __dirname, 'assets/src/js' ),
 	},
 	module: {
 		rules: [

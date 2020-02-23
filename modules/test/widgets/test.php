@@ -1,6 +1,6 @@
 <?php
 
-namespace ElementorCustomPlugin\Modules\Test\Widgets;
+namespace ElementorPlugin\Modules\Test\Widgets;
 
 class Test extends \Elementor\Widget_Base {
 
